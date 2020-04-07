@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"time"
 )
 
 type Client struct {
@@ -16,10 +17,19 @@ type Client struct {
 	httpClient *http.Client
 }
 
+func SetHTTPClient(httpClient *http.Client) func(*Client) {
+	return func(c *Client) {
+		c.httpClient = httpClient
+	}
+}
+
 func NewClient(accessToken string, options ...func(*Client)) *Client {
 	c := &Client{
 		AccessToken: accessToken,
 		UserAgent:   "awair_api_client (https://github.com/arcticfoxnv/awair_api)",
+		httpClient: &http.Client{
+			Timeout: 5 * time.Second,
+		},
 	}
 
 	for _, option := range options {
@@ -75,7 +85,7 @@ func (c *Client) newRequest(method, path string, body interface{}) (*http.Reques
 }
 
 func (c *Client) do(req *http.Request, data interface{}) error {
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := c.httpClient.Do(req)
 	if err != nil {
 		return err
 	}
