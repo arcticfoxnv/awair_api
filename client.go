@@ -17,13 +17,15 @@ type Client struct {
 	httpClient *http.Client
 }
 
+type Option func(*Client)
+
 func SetHTTPClient(httpClient *http.Client) func(*Client) {
 	return func(c *Client) {
 		c.httpClient = httpClient
 	}
 }
 
-func NewClient(accessToken string, options ...func(*Client)) *Client {
+func NewClient(accessToken string, options ...Option) *Client {
 	c := &Client{
 		AccessToken: accessToken,
 		UserAgent:   "awair_api_client (https://github.com/arcticfoxnv/awair_api)",
