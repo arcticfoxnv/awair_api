@@ -1,22 +1,22 @@
 package awair_api
 
 import (
-  "io/ioutil"
-  "net/http"
-  "github.com/stretchr/testify/assert"
-  "testing"
+	"github.com/stretchr/testify/assert"
+	"io/ioutil"
+	"net/http"
+	"testing"
 )
 
 func TestClientUserLatestAirData(t *testing.T) {
-  h := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	h := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, "Bearer abc123", r.Header.Get("Authorization"))
 
-    data, _ := ioutil.ReadFile("testdata/UserLatestAirData.json")
+		data, _ := ioutil.ReadFile("testdata/UserLatestAirData.json")
 
 		w.Write([]byte(data))
 	})
 
-  httpClient, teardown := testingHTTPClient(h)
+	httpClient, teardown := testingHTTPClient(h)
 	defer teardown()
 
 	cli := NewClient("abc123", SetHTTPClient(httpClient))
@@ -28,19 +28,19 @@ func TestClientUserLatestAirData(t *testing.T) {
 }
 
 func TestClientUserLatestAirDataWithF(t *testing.T) {
-  h := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	h := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, "Bearer abc123", r.Header.Get("Authorization"))
-    assert.Equal(t, "true", r.URL.Query().Get("farenheit"))
+		assert.Equal(t, "true", r.URL.Query().Get("farenheit"))
 
-    data, _ := ioutil.ReadFile("testdata/UserLatestAirData.json")
+		data, _ := ioutil.ReadFile("testdata/UserLatestAirData.json")
 		w.Write([]byte(data))
 	})
 
-  httpClient, teardown := testingHTTPClient(h)
+	httpClient, teardown := testingHTTPClient(h)
 	defer teardown()
 
 	cli := NewClient("abc123", SetHTTPClient(httpClient))
-  cli.UseFarenheit = true
+	cli.UseFarenheit = true
 
 	data, err := cli.UserLatestAirData("awair-c", 0)
 

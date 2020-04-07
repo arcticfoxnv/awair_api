@@ -1,22 +1,22 @@
 package awair_api
 
 import (
-  "io/ioutil"
-  "net/http"
-  "github.com/stretchr/testify/assert"
-  "testing"
+	"github.com/stretchr/testify/assert"
+	"io/ioutil"
+	"net/http"
+	"testing"
 )
 
 func TestClientDeviceAPIUsage(t *testing.T) {
-  h := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	h := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, "Bearer abc123", r.Header.Get("Authorization"))
 
-    data, _ := ioutil.ReadFile("testdata/DeviceAPIUsage.json")
+		data, _ := ioutil.ReadFile("testdata/DeviceAPIUsage.json")
 
 		w.Write([]byte(data))
 	})
 
-  httpClient, teardown := testingHTTPClient(h)
+	httpClient, teardown := testingHTTPClient(h)
 	defer teardown()
 
 	cli := NewClient("abc123", SetHTTPClient(httpClient))
@@ -28,15 +28,15 @@ func TestClientDeviceAPIUsage(t *testing.T) {
 }
 
 func TestClientDevices(t *testing.T) {
-  h := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	h := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, "Bearer abc123", r.Header.Get("Authorization"))
 
-    data, _ := ioutil.ReadFile("testdata/Devices.json")
+		data, _ := ioutil.ReadFile("testdata/Devices.json")
 
 		w.Write([]byte(data))
 	})
 
-  httpClient, teardown := testingHTTPClient(h)
+	httpClient, teardown := testingHTTPClient(h)
 	defer teardown()
 
 	cli := NewClient("abc123", SetHTTPClient(httpClient))
@@ -48,15 +48,15 @@ func TestClientDevices(t *testing.T) {
 }
 
 func TestClientUserInfo(t *testing.T) {
-  h := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	h := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, "Bearer abc123", r.Header.Get("Authorization"))
 
-    data, _ := ioutil.ReadFile("testdata/UserInfo.json")
+		data, _ := ioutil.ReadFile("testdata/UserInfo.json")
 
 		w.Write([]byte(data))
 	})
 
-  httpClient, teardown := testingHTTPClient(h)
+	httpClient, teardown := testingHTTPClient(h)
 	defer teardown()
 
 	cli := NewClient("abc123", SetHTTPClient(httpClient))
