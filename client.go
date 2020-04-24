@@ -65,6 +65,11 @@ func (c *Client) newGetRequest(version, endpoint string) (*http.Request, error) 
 	return c.newRequest("GET", url, nil)
 }
 
+func (c *Client) newPostRequest(version, endpoint string, body interface{}) (*http.Request, error) {
+	url := c.getEndpoint(version, endpoint)
+	return c.newRequest("POST", url, body)
+}
+
 func (c *Client) newRequest(method, path string, body interface{}) (*http.Request, error) {
 	var buf io.ReadWriter
 	if body != nil {
@@ -75,10 +80,7 @@ func (c *Client) newRequest(method, path string, body interface{}) (*http.Reques
 		}
 	}
 
-	req, err := http.NewRequest(method, path, buf)
-	if err != nil {
-		return nil, err
-	}
+	req, _ := http.NewRequest(method, path, buf)
 
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("User-Agent", c.UserAgent)
