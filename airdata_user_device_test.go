@@ -27,6 +27,24 @@ func TestClientUserLatestAirData(t *testing.T) {
 	assert.Equal(t, 1, len(data.Data))
 }
 
+func TestClientUserLatestAirDataError(t *testing.T) {
+	h := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, "Bearer abc123", r.Header.Get("Authorization"))
+
+		w.Write([]byte("garbage"))
+	})
+
+	httpClient, teardown := testingHTTPClient(h)
+	defer teardown()
+
+	cli := NewClient("abc123", SetHTTPClient(httpClient))
+
+	data, err := cli.UserLatestAirData("awair-c", 0)
+
+	assert.Nil(t, data)
+	assert.NotNil(t, err)
+}
+
 func TestClientUserLatestAirDataWithF(t *testing.T) {
 	h := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, "Bearer abc123", r.Header.Get("Authorization"))
